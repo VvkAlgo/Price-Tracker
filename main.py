@@ -3,6 +3,22 @@ import time
 import json
 from playwright.sync_api import sync_playwright
 
+from flask import Flask
+from threading import Thread
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot running"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
 BOT_TOKEN = "7832594298:AAGaJtsNHMQ1-CjzSCfa45mdyaWwiQSNgqc"
 BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 USERS_FILE = "users.json"
@@ -262,6 +278,7 @@ def handle_message(msg, users):
 # ---------------- MAIN LOOP ---------------- #
 
 def main():
+    keep_alive()
     users = load_users()
     offset = None
 
